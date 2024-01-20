@@ -150,7 +150,7 @@ class Users extends Controller
             $roles = Role::all()->reject(function ($r) {
                 return ! $r->hasPermission('read-client-portal');
             })->pluck('display_name', 'id');
-        } else if ($user->isEmployee()) {
+        } elseif ($user->isEmployee()) {
             // Show only roles with employee permission
             $roles = Role::where('name', 'employee')->get()->pluck('display_name', 'id');
         } else {
@@ -418,7 +418,6 @@ class Users extends Controller
         event(new LandingPageShowing($u));
 
         $landing_pages = $u->landing_pages;
-
         return response()->json([
             'success' => true,
             'error' => false,

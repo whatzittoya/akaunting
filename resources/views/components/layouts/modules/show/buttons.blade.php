@@ -138,7 +138,7 @@
             @endcan
         @else
             @can('create-modules-item')
-                @if ($module->install)
+                @if (!$module->install)
                     @if (! empty($module->isPurchase) && (! empty($module->purchase_type) && $module->purchase_type == 'monthly'))
                         <x-tooltip message="{!! trans('modules.can_not_install', ['app' => $module->name]) !!}" placement="right">
                             <x-button disabled="disabled">

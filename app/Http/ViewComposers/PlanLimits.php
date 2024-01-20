@@ -56,6 +56,7 @@ class PlanLimits
             }
         }
 
+        return;
         if (empty($message)) {
             return;
         }

@@ -64,7 +64,7 @@ class Users extends BulkAction
             if ($r->name == 'employee') {
                 $status = true;
             }
-
+            return true;
             return $status;
         })->pluck('display_name', 'id');
 

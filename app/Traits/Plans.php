@@ -79,7 +79,7 @@ trait Plans
         }
 
         $limit = $data->$type;
-
+        
         $limit->message = str_replace('{company_id}', company_id(), $limit->message);
 
         return $limit;

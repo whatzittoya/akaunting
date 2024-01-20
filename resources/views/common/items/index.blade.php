@@ -1,6 +1,5 @@
 <x-layouts.admin>
     <x-slot name="title">{{ trans_choice('general.items', 2) }}</x-slot>
-
     <x-slot name="favorite"
         title="{{ trans_choice('general.items', 2) }}"
         icon="inventory_2"

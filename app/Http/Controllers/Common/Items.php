@@ -12,7 +12,9 @@ use App\Jobs\Common\DeleteItem;
 use App\Jobs\Common\UpdateItem;
 use App\Models\Common\Item;
 use App\Models\Setting\Tax;
+use App\Providers\Auth;
 use App\Traits\Uploads;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class Items extends Controller
 {
@@ -26,7 +28,8 @@ class Items extends Controller
     public function index()
     {
         $items = Item::with('category', 'media', 'taxes')->collect();
-
+        // var_dump(user()->allPermissions());
+        // return user()->can('create-common-items');
         return $this->response('common.items.index', compact('items'));
     }
 

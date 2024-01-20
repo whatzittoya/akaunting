@@ -22,7 +22,7 @@ class CreateCompany extends Job implements HasOwner, HasSource, ShouldCreate
 
     public function handle(): Company
     {
-        $this->authorize();
+        //$this->authorize();
 
         $current_company_id = company_id();
 
@@ -57,7 +57,7 @@ class CreateCompany extends Job implements HasOwner, HasSource, ShouldCreate
     public function authorize(): void
     {
         $limit = $this->getAnyActionLimitOfPlan();
-        if (! $limit->action_status) {
+        if (! $limit->action_status || 1==1) {
             throw new \Exception($limit->message);
         }
     }

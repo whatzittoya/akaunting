@@ -75,8 +75,10 @@ class Companies extends Controller
     public function store(Request $request)
     {
         $current_company_id = company_id();
+        
 
         $response = $this->ajaxDispatch(new CreateCompany($request));
+        return response()->json($response);
 
         if ($response['success']) {
             $response['redirect'] = route('companies.switch', $response['data']->id);

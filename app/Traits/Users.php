@@ -112,7 +112,6 @@ trait Users
         if (empty($company_id)) {
             return route('login');
         }
-
         return route($route_name, ['company_id' => $company_id]);
     }
 

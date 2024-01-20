@@ -83,7 +83,6 @@ class Kernel extends HttpKernel
             'wizard.redirect',
             'menu.admin',
             'permission:read-admin-panel',
-            'plan.limits',
         ],
 
         'wizard' => [

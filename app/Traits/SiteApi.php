@@ -44,6 +44,7 @@ trait SiteApi
 
     public static function getResponse($method, $path, $data = [], $status_code = 200)
     {
+       
         $response = static::siteApiRequest($method, $path, $data);
 
         $is_exception = (($response instanceof ConnectException) || ($response instanceof Exception) || ($response instanceof RequestException));
