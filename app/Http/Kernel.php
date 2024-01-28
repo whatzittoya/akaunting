@@ -83,6 +83,7 @@ class Kernel extends HttpKernel
             'wizard.redirect',
             'menu.admin',
             'permission:read-admin-panel',
+            'subscription',
         ],
 
         'wizard' => [
@@ -182,6 +183,8 @@ class Kernel extends HttpKernel
         'money' => \App\Http\Middleware\Money::class,
         'read.only' => \App\Http\Middleware\CheckForReadOnlyMode::class,
         'wizard.redirect' => \App\Http\Middleware\RedirectIfWizardNotCompleted::class,
+        'subscription' => \App\Http\Middleware\CheckSubscription::class,
+
 
         // Vendor
         'ability' => \Laratrust\Middleware\LaratrustAbility::class,

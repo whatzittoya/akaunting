@@ -16,7 +16,6 @@ class AddXHeader
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-
         // Check if we should add header
         if (method_exists($response, 'header')) {
             $response->header('X-Akaunting', 'Online Accounting Software');

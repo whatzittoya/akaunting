@@ -54,7 +54,7 @@ return [
     ],
 
     'invitation' => [
-        'message_1'         => 'You are receiving this email because you are invited to join the Akaunting.',
+        'message_1'         => 'You are receiving this email because you are invited to join the accounting application.',
         'message_2'         => 'If you do not want to join, no further action is required.',
         'button'            => 'Get started',
     ],

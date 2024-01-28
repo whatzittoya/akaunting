@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 /**
  * 'api' middleware and prefix applied to all routes
  *
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::group(['as' => 'api.'], function () {
+    Route::get('/test', [App\Http\Controllers\HomeController::class, 'test']);
     // Ping
     Route::get('ping', 'Common\Ping@pong')->name('ping');
 

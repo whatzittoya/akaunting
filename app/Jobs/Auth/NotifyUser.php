@@ -21,7 +21,7 @@ class NotifyUser extends JobShouldQueue
         $this->user = $user;
         $this->notification = $notification;
 
-        $this->onQueue('jobs');
+        // $this->onQueue('jobs');
     }
 
     /**

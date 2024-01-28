@@ -49,6 +49,19 @@
                                 <x-form.group.select name="roles" label="{{ trans_choice('general.roles', 1) }}" :options="$roles" change="onChangeRole" />
                             @endrole
                         @endif
+                        <x-form.group.date
+                            name="expires_at"
+                            label="Expiration"
+                            icon="calendar_today"
+                            show-date-format="{{ company_date_format() }}"
+                            date-format="Y-m-d"
+                            autocomplete="off"
+                            period=""
+                            min-date="form.issued_at"
+                            min-date-dynamic="min_due_date"
+                            data-value-min
+                            form-group-class="sm:col-span-2"
+                        />
                     </x-slot>
                 </x-form.section>
 

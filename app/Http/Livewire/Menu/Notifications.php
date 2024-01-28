@@ -23,7 +23,6 @@ class Notifications extends Component
         $this->user = user();
 
         $this->notifications = $this->getNotifications();
-
         return view('livewire.menu.notifications');
     }
 
@@ -90,11 +89,13 @@ class Notifications extends Component
 
     public function getNotifications(): array
     {
+
         $notifications = new \stdClass();
         $notifications->notifications = collect();
         $notifications->keyword = $this->keyword;
 
         event(new NotificationsCreated($notifications));
+        // echo response()->json($notifications);
 
         $rows = [];
 

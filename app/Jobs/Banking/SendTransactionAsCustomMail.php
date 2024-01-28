@@ -55,7 +55,6 @@ class SendTransactionAsCustomMail extends Job
             if (($counter == 1) && ! empty($mail_request['cc'])) {
                 $custom_mail['cc'] = $mail_request['cc'];
             }
-
             $contact->notify(new Notification($transaction, $this->template_alias, $attach_pdf, $custom_mail, $attachments));
 
             $counter++;

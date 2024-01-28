@@ -3,8 +3,11 @@
 namespace App\Notifications\Auth;
 
 use App\Models\Auth\UserInvitation;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notifiable;
 
 class Invitation extends Notification
 {
@@ -13,6 +16,8 @@ class Invitation extends Notification
      *
      * @var UserInvitation
      */
+    use Notifiable;
+
     public $invitation;
 
     /**
@@ -45,6 +50,7 @@ class Invitation extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
+        ->from('whosendall@gmail.com','Hussein Muhtadee')
             ->line(trans('auth.invitation.message_1'))
             ->action(trans('auth.invitation.button'), route('register', $this->invitation->token))
             ->line(trans('auth.invitation.message_2'));

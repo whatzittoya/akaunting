@@ -16,7 +16,6 @@ class LogoutIfUserDisabled
     public function handle($request, Closure $next)
     {
         $user = user();
-
         if (!$user || $user->enabled) {
             return $next($request);
         }

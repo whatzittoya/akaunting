@@ -119,7 +119,6 @@ class Installer
         if (!is_writable(base_path('storage/logs'))) {
             $requirements[] = trans('install.requirements.directory', ['directory' => 'storage/logs']);
         }
-
         if (Console::run('help') !== true) {
             $requirements[] = trans('install.error.php_version', ['php_version' => AKAUNTING_PHP]);
         }

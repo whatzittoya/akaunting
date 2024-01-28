@@ -39,7 +39,9 @@ class UpdateUser extends Job implements ShouldUpdate
             }
 
             if ($this->request->has('roles')) {
-                $this->model->roles()->sync($this->request->get('roles'));
+                $this->model->roles()->sync([$this->request->get('roles') => ['expires_at' => $this->request->get('expires_at')]]);
+
+
             }
 
             if ($this->request->has('companies')) {

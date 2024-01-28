@@ -29,12 +29,11 @@ class ShowInNotifications
         if (! empty($notifications)) {
             $event->notifications->notifications = $notifications;
 
-            return;
+            //return;
         }
 
         // Notification tables
         $notifications = collect();
-
         // Update notifications
         if (user()->can('read-install-updates')) {
             $updates = Versions::getUpdates();
@@ -59,13 +58,11 @@ class ShowInNotifications
                 ];
                 $new->created_at = Date::now();
 
-                $notifications->push($new);
+                //$notifications->push($new);
             }
         }
-
         // New app notifications
         $new_apps = $this->getNotifications('new-apps');
-
         foreach ($new_apps as $key => $new_app) {
             if (setting('notifications.' . user()->id . '.' . $new_app->alias)) {
                 unset($new_apps[$key]);
@@ -92,7 +89,7 @@ class ShowInNotifications
             ];
             $new->created_at = $new_app->started_at->date;
 
-            $notifications->push($new);
+            //$notifications->push($new);
         }
 
         foreach (user()->unreadNotifications as $unreadNotification) {

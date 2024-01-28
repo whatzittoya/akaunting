@@ -17,7 +17,6 @@ class Requirements extends Controller
     {
         // Check requirements
         $requirements = Installer::checkServerRequirements();
-
         if (empty($requirements)) {
             // Create the .env file
             if (!File::exists(base_path('.env'))) {

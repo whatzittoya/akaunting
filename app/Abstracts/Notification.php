@@ -24,7 +24,7 @@ abstract class Notification extends BaseNotification implements ShouldQueue
      */
     public function __construct()
     {
-        $this->onQueue('notifications');
+        // $this->onQueue('notifications');
     }
 
     /**

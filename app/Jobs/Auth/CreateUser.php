@@ -45,7 +45,9 @@ class CreateUser extends Job implements HasOwner, HasSource, ShouldCreate
             }
 
             if ($this->request->has('roles')) {
-                $this->model->roles()->attach($this->request->get('roles'));
+                // $this->model->roles()->attach($this->request->get('roles'));
+                $this->model->roles()->sync([$this->request->get('roles') => ['expires_at' => $this->request->get('expires_at')]]);
+
             }
 
             if ($this->request->has('companies')) {

@@ -468,9 +468,7 @@ trait Modules
 
         return Cache::remember($key, Date::now()->addHours(6), function () {
             $data = [];
-
             $notifications = (array) static::getResponseData('GET', 'apps/notifications');
-
             foreach ($notifications as $notification) {
                 $data[$notification->path][] = $notification;
             }

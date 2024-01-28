@@ -183,6 +183,7 @@ class Users extends Controller
         $roles_url = $this->getCloudRolesPageUrl();
 
         $route = (request()->route()->getName() == 'profile.edit') ? 'profile.update' : 'users.update';
+        // return response()->json($user->roles[0]->pivot->expires_at);
 
         return view('auth.users.edit', compact('user', 'companies', 'roles', 'landing_pages', 'roles_url', 'route'));
     }
@@ -300,7 +301,7 @@ class Users extends Controller
     public function readUpcomingBills($user_id)
     {
         $user = user_model_class()::find($user_id);
-
+            
         // Mark bill notifications as read
         foreach ($user->unreadNotifications as $notification) {
             // Not a bill notification
