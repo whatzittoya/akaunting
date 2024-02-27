@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Mail\WelcomeEmail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+
 /**
  * 'api' middleware and prefix applied to all routes
  *
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
  */
 
 Route::group(['as' => 'api.'], function () {
+
     Route::get('/test', [App\Http\Controllers\HomeController::class, 'test']);
     // Ping
     Route::get('ping', 'Common\Ping@pong')->name('ping');
@@ -34,6 +37,9 @@ Route::group(['as' => 'api.'], function () {
     Route::get('items/{item}/enable', 'Common\Items@enable')->name('items.enable');
     Route::get('items/{item}/disable', 'Common\Items@disable')->name('items.disable');
     Route::apiResource('items', 'Common\Items', ['middleware' => ['dropzone']]);
+
+
+
 
     // Contacts
     Route::get('contacts/{contact}/enable', 'Common\Contacts@enable')->name('contacts.enable');
@@ -83,4 +89,8 @@ Route::group(['as' => 'api.'], function () {
     // Translations
     Route::get('translations/{locale}/all', 'Common\Translations@all')->name('translations.all');
     Route::get('translations/{locale}/{file}', 'Common\Translations@file')->name('translations.file');
+
+    Route::group(['prefix' => 'quinos'], function () {
+        Route::post('items', 'Common\Items@storeQuinos')->name('items.store_quinos');
+    });
 });

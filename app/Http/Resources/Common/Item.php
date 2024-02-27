@@ -23,9 +23,9 @@ class Item extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'sale_price' => $this->sale_price,
-            'sale_price_formatted' => money((double) $this->sale_price)->format(),
+            'sale_price_formatted' => money((float) $this->sale_price)->format(),
             'purchase_price' => $this->purchase_price,
-            'purchase_price_formatted' => money((double) $this->purchase_price)->format(),
+            'purchase_price_formatted' => money((float) $this->purchase_price)->format(),
             'category_id' => $this->category_id,
             'picture' => $this->picture,
             'enabled' => $this->enabled,
@@ -35,6 +35,10 @@ class Item extends JsonResource
             'updated_at' => $this->updated_at ? $this->updated_at->toIso8601String() : '',
             'taxes' => [static::$wrap => ItemTax::collection($this->taxes)],
             'category' => new Category($this->category),
+            'barcode' => $this->barcode,
+            'quantity' => $this->quantity,
+            'code' => $this->code,
+            'source_id' => $this->source_id,
         ];
     }
 }

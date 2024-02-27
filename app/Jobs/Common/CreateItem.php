@@ -13,6 +13,7 @@ class CreateItem extends Job implements HasOwner, HasSource, ShouldCreate
 {
     public function handle(): Item
     {
+
         \DB::transaction(function () {
             $this->model = Item::create($this->request->all());
 

@@ -6,9 +6,11 @@ use App\Abstracts\Http\ApiController;
 use App\Http\Requests\Common\Item as Request;
 use App\Http\Resources\Common\Item as Resource;
 use App\Jobs\Common\CreateItem;
+use App\Jobs\Common\CreateItemQuinos;
 use App\Jobs\Common\DeleteItem;
 use App\Jobs\Common\UpdateItem;
 use App\Models\Common\Item;
+use Illuminate\Http\Request as Req;
 
 class Items extends ApiController
 {
@@ -34,7 +36,7 @@ class Items extends ApiController
     {
         $item = Item::with('category', 'taxes')->find($id);
 
-        if (! $item instanceof Item) {
+        if (!$item instanceof Item) {
             return $this->errorInternal('No query results for model [' . Item::class . '] ' . $id);
         }
 
@@ -51,6 +53,23 @@ class Items extends ApiController
     {
         $item = $this->dispatch(new CreateItem($request));
 
+        return $this->created(route('api.items.show', $item->id), new Resource($item));
+    }
+
+    public function storeQuinos(Req $request)
+    {
+        $result = [];
+        $json = $request->json()->all();
+
+        foreach ($json as $key => $value) {
+            $item = $this->dispatch(new CreateItemQuinos($value));
+            $result[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
+
+        return response()->json($result);
         return $this->created(route('api.items.show', $item->id), new Resource($item));
     }
 
@@ -106,7 +125,7 @@ class Items extends ApiController
             $this->dispatch(new DeleteItem($item));
 
             return $this->noContent();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->errorUnauthorized($e->getMessage());
         }
     }

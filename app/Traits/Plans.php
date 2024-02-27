@@ -36,16 +36,16 @@ trait Plans
         $company_limit = $this->getCompanyLimitOfPlan();
         $invoice_limit = $this->getInvoiceLimitOfPlan();
 
-        if (! $user_limit->action_status) {
-            return $user_limit;
+        if (!$user_limit->action_status) {
+            // return $user_limit;
         }
 
-        if (! $company_limit->action_status) {
-            return $company_limit;
+        if (!$company_limit->action_status) {
+            // return $company_limit;
         }
 
-        if (! $invoice_limit->action_status) {
-            return $invoice_limit;
+        if (!$invoice_limit->action_status) {
+            // return $invoice_limit;
         }
 
         $limit = new \stdClass();
@@ -58,7 +58,7 @@ trait Plans
 
     public function getPlanLimitByType($type): object
     {
-        if (! config('app.installed') || (env_is_testing() && app()->runningInConsole())) {
+        if (!config('app.installed') || (env_is_testing() && app()->runningInConsole())) {
             $limit = new \stdClass();
 
             $limit->action_status = true;
@@ -68,7 +68,7 @@ trait Plans
             return $limit;
         }
 
-        if (! $data = $this->getPlanLimits()) {
+        if (!$data = $this->getPlanLimits()) {
             $limit = new \stdClass();
 
             $limit->action_status = false;
@@ -79,7 +79,7 @@ trait Plans
         }
 
         $limit = $data->$type;
-        
+
         $limit->message = str_replace('{company_id}', company_id(), $limit->message);
 
         return $limit;
@@ -92,7 +92,7 @@ trait Plans
         return Cache::remember($key, Date::now()->addHour(), function () {
             $url = 'plans/limits';
 
-            if (! $data = static::getResponseData('GET', $url, ['timeout' => 10])) {
+            if (!$data = static::getResponseData('GET', $url, ['timeout' => 10])) {
                 return false;
             }
 

@@ -2,7 +2,7 @@
 
 namespace App\Notifications\Subscription;
 
-use App\Abstracts\Notification;
+use Illuminate\Notifications\Notification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -15,7 +15,6 @@ class Expired extends Notification
     public $template;
     public function __construct()
     {
-        parent::__construct();
 
     }
     public function via($notifiable)

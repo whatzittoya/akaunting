@@ -35,7 +35,7 @@ class Item extends Model
      *
      * @var array
      */
-    protected $fillable = ['company_id', 'type', 'name', 'description', 'sale_price', 'purchase_price', 'category_id', 'enabled', 'created_from', 'created_by'];
+    protected $fillable = ['company_id', 'type', 'name', 'description', 'sale_price', 'purchase_price', 'category_id', 'enabled', 'created_from', 'created_by', 'barcode', 'quantity', 'code', 'source_id'];
 
     /**
      * The attributes that should be cast.
@@ -54,7 +54,7 @@ class Item extends Model
      *
      * @var array
      */
-    protected $sortable = ['name', 'category.name', 'description', 'sale_price', 'purchase_price', 'enabled'];
+    protected $sortable = ['name', 'category.name', 'description', 'sale_price', 'purchase_price', 'enabled', 'barcode', 'quantity', 'code', 'source_id'];
 
     /**
      * @var array
@@ -233,5 +233,21 @@ class Item extends Model
     protected static function newFactory()
     {
         return \Database\Factories\Item::new();
+    }
+
+    // Quinos
+    public function createOrUpdate($source_id, $company_id, $request)
+    {
+        // Find the item by name
+        $item = Item::where('source_id', $source_id)->where('company_id', $company_id)->first();
+
+        // If the item exists, update its price, otherwise create a new item
+        if ($item) {
+            $item->update($request);
+        } else {
+            $item = Item::create($request);
+        }
+
+        return $item;
     }
 }

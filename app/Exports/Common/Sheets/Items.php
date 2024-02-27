@@ -29,6 +29,7 @@ class Items extends Export
             'purchase_price',
             'category_name',
             'enabled',
+            'barcode',
         ];
     }
 }

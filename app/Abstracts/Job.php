@@ -39,7 +39,7 @@ abstract class Job
 
     public function bootCreate(...$arguments): void
     {
-        if (! $this instanceof ShouldCreate) {
+        if (!$this instanceof ShouldCreate) {
             return;
         }
 
@@ -59,7 +59,7 @@ abstract class Job
 
     public function bootUpdate(...$arguments): void
     {
-        if (! $this instanceof ShouldUpdate) {
+        if (!$this instanceof ShouldUpdate) {
             return;
         }
 
@@ -75,7 +75,7 @@ abstract class Job
 
     public function bootDelete(...$arguments): void
     {
-        if (! $this instanceof ShouldDelete) {
+        if (!$this instanceof ShouldDelete) {
             return;
         }
 
@@ -95,14 +95,16 @@ abstract class Job
             return $request;
         }
 
-        $class = new class() extends FormRequest {};
+        $class = new class() extends FormRequest
+        {
+        };
 
         return $class->merge($request);
     }
 
     public function setOwner(): void
     {
-        if (! $this->request instanceof Request) {
+        if (!$this->request instanceof Request) {
             return;
         }
 
@@ -115,7 +117,7 @@ abstract class Job
 
     public function setSource(): void
     {
-        if (! $this->request instanceof Request) {
+        if (!$this->request instanceof Request) {
             return;
         }
 

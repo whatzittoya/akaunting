@@ -18,8 +18,8 @@ class HomeController extends Controller
         //dibawah ini merupakan
         //contoh mengirimkan notifikasi ke semua user
         // Notification::send($user, new Expired());
-        //  $user->notify(new Expired());
-        //  return 123;
+          $user->notify(new Expired());
+          return 123;
         $invitation = UserInvitation::create([
             'user_id' => $user->id,
             'token' => (string) Str::uuid(),
