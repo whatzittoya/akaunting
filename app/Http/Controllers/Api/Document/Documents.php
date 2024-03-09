@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api\Document;
 
 use App\Abstracts\Http\ApiController;
 use App\Http\Requests\Document\Document as Request;
+use App\Http\Requests\JsonRequest;
 use App\Http\Resources\Document\Document as Resource;
 use App\Jobs\Document\CreateDocument;
+use App\Jobs\Document\CreateDocumentQuinos;
 use App\Jobs\Document\DeleteDocument;
 use App\Jobs\Document\UpdateDocument;
 use App\Models\Document\Document;
+use Illuminate\Http\Request as Req;
 
 class Documents extends ApiController
 {
@@ -19,7 +22,7 @@ class Documents extends ApiController
      */
     public function index()
     {
-        $documents = Document::with('contact', 'histories', 'items', 'transactions')->collect(['issued_at'=> 'desc']);
+        $documents = Document::with('contact', 'histories', 'items', 'transactions')->collect(['issued_at' => 'desc']);
 
         return Resource::collection($documents);
     }
@@ -39,7 +42,7 @@ class Documents extends ApiController
             $document = Document::where('document_number', $id)->first();
         }
 
-        if (! $document instanceof Document) {
+        if (!$document instanceof Document) {
             return $this->errorInternal('No query results for model [' . Document::class . '] ' . $id);
         }
 
@@ -58,6 +61,24 @@ class Documents extends ApiController
         $document = $this->dispatch(new CreateDocument($request));
 
         return $this->created(route('api.documents.show', $document->id), new Resource($document));
+    }
+
+    #Quinos
+    public function storeQuinos(JsonRequest $request)
+    {
+
+
+        $result = [];
+        $json = $request->json()->all();
+
+        foreach ($json as $key => $value) {
+            $document = $this->dispatch(new CreateDocumentQuinos($value));
+            $result[] = [
+                'id' => $document->id,
+            ];
+        }
+
+        return response()->json($result);
     }
 
     /**
@@ -88,7 +109,7 @@ class Documents extends ApiController
             $this->dispatch(new DeleteDocument($document));
 
             return $this->noContent();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->errorUnauthorized($e->getMessage());
         }
     }

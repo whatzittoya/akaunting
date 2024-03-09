@@ -70,7 +70,7 @@ class Items extends ApiController
         }
 
         return response()->json($result);
-        return $this->created(route('api.items.show', $item->id), new Resource($item));
+        // return $this->created(route('api.items.show', $item->id), new Resource($item));
     }
 
     /**

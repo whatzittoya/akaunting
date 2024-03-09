@@ -9,11 +9,12 @@ use App\Interfaces\Job\HasOwner;
 use App\Interfaces\Job\HasSource;
 use App\Interfaces\Job\ShouldCreate;
 use App\Jobs\Document\CreateDocumentItemsAndTotals;
+use App\Models\Common\Contact;
 use App\Models\Document\Document;
 use App\Traits\Plans;
 use Illuminate\Support\Str;
 
-class CreateDocument extends Job implements HasOwner, HasSource, ShouldCreate
+class CreateDocumentQuinos extends Job implements HasOwner, HasSource, ShouldCreate
 {
     use Plans;
 
@@ -27,6 +28,11 @@ class CreateDocument extends Job implements HasOwner, HasSource, ShouldCreate
         event(new DocumentCreating($this->request));
 
         \DB::transaction(function () {
+            $contact = new Contact;
+            $c = $contact->createOrUpdate($this->request->contact_name, company_id(), $this->request->currency_code);
+            //merge contact id
+            $this->request->merge(['contact_id' => $c->id, 'contact_name' => $c->name]);
+
             $this->model = Document::create($this->request->all());
 
             // Upload attachment
@@ -38,7 +44,7 @@ class CreateDocument extends Job implements HasOwner, HasSource, ShouldCreate
                 }
             }
 
-            $this->dispatch(new CreateDocumentItemsAndTotals($this->model, $this->request));
+            $this->dispatch(new CreateDocumentItemsAndTotalsQuinos($this->model, $this->request));
 
             $this->model->update($this->request->all());
 

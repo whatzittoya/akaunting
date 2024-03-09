@@ -92,5 +92,6 @@ Route::group(['as' => 'api.'], function () {
 
     Route::group(['prefix' => 'quinos'], function () {
         Route::post('items', 'Common\Items@storeQuinos')->name('items.store_quinos');
+        Route::post('documents', 'Document\Documents@storeQuinos')->name('documents.store_quinos');
     });
 });

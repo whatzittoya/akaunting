@@ -17,20 +17,26 @@ class CreateItemQuinos extends Job implements HasOwner, HasSource, ShouldCreate
     {
         \DB::transaction(function () {
             $item_type = Category::ITEM_TYPE;
-            $category_arr = [
-                'name' => $this->request->category_name,
-                'type' => $item_type,
-                'enabled' => 1,
-                'created_from' => $this->request->created_from,
-                'created_by' => $this->request->created_by,
-                'company_id' => company_id(),
-                'color' => ''
+            //check if request has category name
+            if (!empty($this->request->category_name)) {
+                $category_arr = [
+                    'name' => $this->request->category_name,
+                    'type' => $item_type,
+                    'enabled' => 1,
+                    'created_from' => $this->request->created_from,
+                    'created_by' => $this->request->created_by,
+                    'company_id' => company_id(),
+                    'color' => ''
 
-            ];
+                ];
 
-            $category = Category::firstOrCreate($category_arr);
+                $category = Category::firstOrCreate($category_arr);
+                //merge category id
+                $this->request->merge(['category_id' => $category->id]);
+            }
 
-            $this->request->merge(['category_id' => $category->id, 'company_id' => company_id()]);
+
+            $this->request->merge(['company_id' => company_id()]);
             $item = new Item;
             $this->model = $item->createOrUpdate($this->request->source_id, $this->request->company_id, $this->request->all());
 

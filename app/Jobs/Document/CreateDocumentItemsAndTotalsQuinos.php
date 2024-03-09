@@ -7,13 +7,14 @@ use App\Interfaces\Job\HasOwner;
 use App\Interfaces\Job\HasSource;
 use App\Interfaces\Job\ShouldCreate;
 use App\Jobs\Common\CreateItem;
+use App\Jobs\Common\CreateItemQuinos;
 use App\Models\Document\Document;
 use App\Models\Document\DocumentTotal;
 use App\Traits\Currencies;
 use App\Traits\DateTime;
 use Illuminate\Support\Str;
 
-class CreateDocumentItemsAndTotals extends Job implements HasOwner, HasSource, ShouldCreate
+class CreateDocumentItemsAndTotalsQuinos extends Job implements HasOwner, HasSource, ShouldCreate
 {
     use Currencies, DateTime;
 
@@ -161,7 +162,6 @@ class CreateDocumentItemsAndTotals extends Job implements HasOwner, HasSource, S
         $sub_total = $actual_total = $discount_amount = $discount_amount_total = 0;
 
         $taxes = [];
-
         if (empty($this->request['items'])) {
             return [$sub_total, $actual_total, $discount_amount_total, $taxes];
         }
@@ -195,6 +195,7 @@ class CreateDocumentItemsAndTotals extends Job implements HasOwner, HasSource, S
                     'purchase_price' => $item['price'],
                     'created_from' => $item['created_from'],
                     'created_by' => $item['created_by'],
+                    'source_id' => $item['source_id'],
                     'enabled' => '1',
                 ];
 
@@ -202,7 +203,7 @@ class CreateDocumentItemsAndTotals extends Job implements HasOwner, HasSource, S
                     $new_item_request['tax_ids'] = $item['tax_ids'];
                 }
 
-                $new_item = $this->dispatch(new CreateItem($new_item_request));
+                $new_item = $this->dispatch(new CreateItemQuinos($new_item_request));
 
                 $item['item_id'] = $new_item->id;
             }

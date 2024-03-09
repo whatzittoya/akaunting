@@ -234,9 +234,9 @@ class Contact extends Model
      */
     public function getLogoAttribute($value)
     {
-        if (! empty($value) && ! $this->hasMedia('logo')) {
+        if (!empty($value) && !$this->hasMedia('logo')) {
             return $value;
-        } elseif (! $this->hasMedia('logo')) {
+        } elseif (!$this->hasMedia('logo')) {
             return false;
         }
 
@@ -341,7 +341,8 @@ class Contact extends Model
                     'id' => 'index-line-actions-show-' . $this->type . '-' . $this->id,
                 ],
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         try {
             $actions[] = [
@@ -353,7 +354,8 @@ class Contact extends Model
                     'id' => 'index-line-actions-edit-' . $this->type . '-' . $this->id,
                 ],
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         try {
             $actions[] = [
@@ -365,7 +367,8 @@ class Contact extends Model
                     'id' => 'index-line-actions-duplicate-' . $this->type . '-' . $this->id,
                 ],
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         try {
             $delete_type = trans_choice('general.' . $translation_prefix, 1);
@@ -381,7 +384,8 @@ class Contact extends Model
                 ],
                 'model' => $this,
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return $actions;
     }
@@ -394,5 +398,30 @@ class Contact extends Model
     protected static function newFactory()
     {
         return \Database\Factories\Contact::new();
+    }
+
+    //create create or update based on name
+
+    public function createOrUpdate($name, $company_id, $currency)
+    {
+        // echo "company_id" . $company_id;
+        if (!$name) {
+            $name = 'no_name';
+        }
+        $contact = Contact::where('name', $name)->where('company_id', $company_id)->first();
+        //if name empty set name no name
+
+        // If the item exists, update its price, otherwise create a new item
+        if (!$contact) {
+            //create contact with name currency_code and type
+            $contact = Contact::create([
+                'name' => $name,
+                'company_id' => $company_id,
+                'type' => 'customer',
+                'currency_code' => $currency
+            ]);
+        }
+
+        return $contact;
     }
 }

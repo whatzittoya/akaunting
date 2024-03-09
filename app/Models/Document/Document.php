@@ -60,6 +60,8 @@ class Document extends Model
         'parent_id',
         'created_from',
         'created_by',
+        'expected_arival_date',
+        'delivery_address',
     ];
 
     /**
@@ -73,6 +75,7 @@ class Document extends Model
         'amount'        => 'double',
         'currency_rate' => 'double',
         'deleted_at'    => 'datetime',
+        'expected_arival_date' => 'datetime',
     ];
 
     /**
@@ -221,9 +224,9 @@ class Document extends Model
     public function scopeInvoiceRecurring(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', self::INVOICE_RECURRING_TYPE)
-                    ->whereHas('recurring', function (Builder $query) {
-                        $query->whereNull('deleted_at');
-                    });
+            ->whereHas('recurring', function (Builder $query) {
+                $query->whereNull('deleted_at');
+            });
     }
 
     public function scopeBill(Builder $query): Builder
@@ -234,9 +237,9 @@ class Document extends Model
     public function scopeBillRecurring(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', self::BILL_RECURRING_TYPE)
-                    ->whereHas('recurring', function (Builder $query) {
-                        $query->whereNull('deleted_at');
-                    });
+            ->whereHas('recurring', function (Builder $query) {
+                $query->whereNull('deleted_at');
+            });
     }
 
     /**
@@ -280,9 +283,9 @@ class Document extends Model
     {
         $has_attachment = $this->hasMedia('attachment');
 
-        if (! empty($value) && ! $has_attachment) {
+        if (!empty($value) && !$has_attachment) {
             return $value;
-        } elseif (! $has_attachment) {
+        } elseif (!$has_attachment) {
             return false;
         }
 
@@ -407,7 +410,7 @@ class Document extends Model
      */
     public function getStatusLabelAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'paid'      => 'status-success',
             'partial'   => 'status-partial',
             'sent'      => 'status-danger',
@@ -425,7 +428,7 @@ class Document extends Model
      */
     public function getRecurringStatusLabelAttribute()
     {
-        return match($this->recurring->status) {
+        return match ($this->recurring->status) {
             'active'    => 'status-partial',
             'ended'     => 'status-success',
             default     => 'status-success',
@@ -441,7 +444,7 @@ class Document extends Model
     {
         $amount = $this->amount;
 
-        $this->totals->where('code', 'tax')->each(function ($total) use(&$amount) {
+        $this->totals->where('code', 'tax')->each(function ($total) use (&$amount) {
             $tax = Tax::name($total->name)->first();
 
             if (!empty($tax) && ($tax->type == 'withholding')) {
@@ -511,11 +514,12 @@ class Document extends Model
                         'id' => 'index-more-actions-show-' . $this->id,
                     ],
                 ];
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         try {
-            if (! $this->reconciled) {
+            if (!$this->reconciled) {
                 $actions[] = [
                     'title' => trans('general.edit'),
                     'icon' => 'edit',
@@ -526,7 +530,8 @@ class Document extends Model
                     ],
                 ];
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         try {
             $actions[] = [
@@ -538,13 +543,14 @@ class Document extends Model
                     'id' => 'index-line-actions-duplicate-' . $this->type . '-' . $this->id,
                 ],
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         if (
             $this->status != 'paid'
-            && ! str_contains($this->type, 'recurring')
+            && !str_contains($this->type, 'recurring')
             && (empty($this->transactions->count())
-            || (! empty($this->transactions->count()) && $this->paid != $this->amount))
+                || (!empty($this->transactions->count()) && $this->paid != $this->amount))
         ) {
             try {
                 if ($this->totals->count()) {
@@ -570,7 +576,8 @@ class Document extends Model
                         ],
                     ];
                 }
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
         try {
@@ -584,7 +591,8 @@ class Document extends Model
                     'target' => '_blank',
                 ],
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         try {
             $actions[] = [
@@ -597,9 +605,10 @@ class Document extends Model
                     'target' => '_blank',
                 ],
             ];
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
-        if (! str_contains($this->type, 'recurring')) {
+        if (!str_contains($this->type, 'recurring')) {
             if ($this->status != 'cancelled') {
                 $actions[] = [
                     'type' => 'divider',
@@ -610,37 +619,39 @@ class Document extends Model
                         'type' => 'button',
                         'title' => trans('general.share_link'),
                         'icon' => 'share',
-                        'url' => route('modals.'. $prefix . '.share.create', $this->id),
+                        'url' => route('modals.' . $prefix . '.share.create', $this->id),
                         'permission' => 'read-' . $group . '-' . $permission_prefix,
                         'attributes' => [
                             'id' => 'index-line-actions-share-link-' . $this->type . '-'  . $this->id,
-                            '@click' => 'onShareLink("' . route('modals.'. $prefix . '.share.create', $this->id) . '")',
+                            '@click' => 'onShareLink("' . route('modals.' . $prefix . '.share.create', $this->id) . '")',
                         ],
                     ];
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
 
                 try {
-                    if (! empty($this->contact) && $this->contact->email && ($this->type == 'invoice')) {
+                    if (!empty($this->contact) && $this->contact->email && ($this->type == 'invoice')) {
                         $actions[] = [
                             'type' => 'button',
                             'title' => trans('invoices.send_mail'),
                             'icon' => 'email',
-                            'url' => route('modals.'. $prefix . '.emails.create', $this->id),
+                            'url' => route('modals.' . $prefix . '.emails.create', $this->id),
                             'permission' => 'read-' . $group . '-' . $permission_prefix,
                             'attributes' => [
                                 'id' => 'index-line-actions-send-email-' . $this->type . '-'  . $this->id,
-                                '@click' => 'onSendEmail("' . route('modals.'. $prefix . '.emails.create', $this->id) . '")',
+                                '@click' => 'onSendEmail("' . route('modals.' . $prefix . '.emails.create', $this->id) . '")',
                             ],
                         ];
                     }
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             }
 
             $actions[] = [
                 'type' => 'divider',
             ];
 
-            if (! in_array($this->status, ['cancelled', 'draft'])) {
+            if (!in_array($this->status, ['cancelled', 'draft'])) {
                 try {
                     $actions[] = [
                         'title' => trans('documents.actions.cancel'),
@@ -651,7 +662,8 @@ class Document extends Model
                             'id' => 'index-line-actions-cancel-' . $this->type . '-'  . $this->id,
                         ],
                     ];
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
 
                 $actions[] = [
                     'type' => 'divider',
@@ -671,20 +683,22 @@ class Document extends Model
                     ],
                     'model' => $this,
                 ];
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         } else {
             if ($this->recurring && $this->recurring->status != 'ended') {
                 try {
                     $actions[] = [
                         'title' => trans('general.end'),
                         'icon' => 'block',
-                        'url' => route($prefix. '.end', $this->id),
+                        'url' => route($prefix . '.end', $this->id),
                         'permission' => 'update-' . $group . '-' . $permission_prefix,
                         'attributes' => [
                             'id' => 'index-line-actions-end-' . $this->type . '-' . $this->id,
                         ],
                     ];
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             }
         }
 
