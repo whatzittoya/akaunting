@@ -79,7 +79,7 @@ class Documents extends ApiController
             ];
         }
 
-        return response()->json($value);
+        return response()->json($value->source_id);
     }
 
     /**
