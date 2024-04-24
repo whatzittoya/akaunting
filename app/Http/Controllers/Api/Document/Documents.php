@@ -74,7 +74,7 @@ class Documents extends ApiController
         foreach ($json as $key => $value) {
             $document = $this->dispatch(new CreateDocumentQuinos($value));
             $result[] = [
-                'id' => $value->id,
+                'source_id' => $value->source_id,
                 'id' => $document->id,
             ];
         }
